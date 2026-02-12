@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ski Report Signup</title>
+    <link rel="stylesheet" href="frontend.css">
+</head>
+<body>
+    <div class="container">
+        <h1>❄️ Ski Report ❄️</h1>
+        <p class="subtitle">Daily/weekly updates for your favorite slopes.</p>
+
+        <form id="skiForm">
+            <div class="form-group">
+                <label for="latitude">Latitude</label>
+                <input type="number" id="latitude" name="latitude" step="0.01" placeholder="46.92" required>
+            </div>
+
+            <div class="form-group">
+                <label for="longitude">Longitude</label>
+                <input type="number" id="longitude" name="longitude" step="0.01" placeholder="-121.48" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" required>
+            </div>
+
+            <div class="checkbox-group">
+                <label>
+                    <input type="checkbox" name="reports" value="daily">
+                    Daily Report
+                </label>
+                <label>
+                    <input type="checkbox" name="reports" value="weekly">
+                    Weekly Report
+                </label>
+            </div>
+
+            <button type="submit" class="submit-btn">Subscribe</button>
+
+            <p class="info-text">Your data will only be used to send you reports.</p>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('skiForm');
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const latitude = document.getElementById('latitude').value;
+            const longitude = document.getElementById('longitude').value;
+            const email = document.getElementById('email').value;
+            const daily = document.querySelector('input[value="daily"]').checked;
+            const weekly = document.querySelector('input[value="weekly"]').checked;
+            
+            if (!daily && !weekly) {
+                alert('Please select at least one report type');
+                return;
+            }
+            
+            const data = {
+                latitude: latitude,
+                longitude: longitude,
+                email: email,
+                daily: daily,
+                weekly: weekly
+            };
+            
+            // Send to backend
+            fetch('http://192.168.68.121/api/subscribers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert('Signup successful! Check your email to confirm.');
+                    form.reset();
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to connect to server');
+            });
+        });
+    </script>
+</body>
+</html>
