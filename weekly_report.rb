@@ -51,7 +51,7 @@ subscribers.each do |subscriber|
   end
 
   email_body += "<hr style='margin-top: 30px; margin-bottom: 20px;'>"
-  email_body += "<p style='font-size: 12px; color: #999;'><a href='http://192.168.68.121/unsubscribe?email=#{email}'>Unsubscribe</a></p>\n"
+  email_body += "<p style='font-size: 12px; color: #999;'><a href='https://demetrius-sugared-superevangelically.ngrok-free.dev/unsubscribe?email=#{email}'>Unsubscribe</a></p>\n"
 
   Mail.deliver do
     from "deesjaime@gmail.com"
