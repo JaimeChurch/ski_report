@@ -5,7 +5,7 @@ set :port, 4567
 set :bind, '0.0.0.0'
 
 # Disable Rack protection for ngrok
-set :protection, except: :host_authorization
+disable :protection
 
 # Enable CORS
 before do
