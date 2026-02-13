@@ -5,16 +5,19 @@ set :port, 4567
 set :bind, '0.0.0.0'
 
 # Disable Rack protection for ngrok
-set :protection, except: :http_origin
+set :protection, except: :host_authorization
 
 # Enable CORS
 before do
   response.headers['Access-Control-Allow-Origin'] = '*'
-  response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+  response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
   response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
 end
 
 options '*' do
+  response.headers['Access-Control-Allow-Origin'] = '*'
+  response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+  response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
   200
 end
 
