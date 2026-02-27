@@ -13,7 +13,28 @@
         <h1>❄️ Ski Report ❄️</h1>
         <p class="subtitle">Daily/weekly updates for your favorite slopes.</p>
 
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required>
+        </div>
+
         <form id="skiForm">
+            <div class="form-group">
+                <label for="resort">SELECT A RESORT</label>
+                <select id="resort" name="resort">
+                    <option value="">-- Select a Resort --</option>
+                    <option value="46.92,-121.48">Mount Bachelor, OR</option>
+                    <option value="47.75,-121.81">Crystal Mountain, WA</option>
+                    <option value="47.44,-121.54">Snoqualmie Pass, WA</option>
+                    <option value="46.35,-121.49">Mount Hood, OR</option>
+                    <option value="48.38,-121.68">North Cascades, WA</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="latitude">OR USE CUSTOM COORDINATES</label>
+            </div>
+  
             <div class="form-group">
                 <label for="latitude">Latitude</label>
                 <input type="number" id="latitude" name="latitude" step="0.01" placeholder="46.92" required>
@@ -22,11 +43,6 @@
             <div class="form-group">
                 <label for="longitude">Longitude</label>
                 <input type="number" id="longitude" name="longitude" step="0.01" placeholder="-121.48" required>
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" placeholder="you@example.com" required>
             </div>
 
             <div class="checkbox-group">
@@ -48,6 +64,21 @@
 
     <script>
         const form = document.getElementById('skiForm');
+        const resortSelect = document.getElementById('resort');
+        const latitudeInput = document.getElementById('latitude');
+        const longitudeInput = document.getElementById('longitude');
+
+// Populate lat/long when resort is selected
+        resortSelect.addEventListener('change', function () {
+            if (this.value) {
+                const [lat, lon] = this.value.split(',');
+                latitudeInput.value = lat;
+                longitudeInput.value = lon;
+            } else {
+                latitudeInput.value = '';
+                longitudeInput.value = '';
+            }
+        });
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();

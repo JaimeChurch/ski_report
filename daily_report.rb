@@ -2,6 +2,7 @@ require "httparty"
 require "mail"
 require 'dotenv'
 require 'json'
+require 'cgi'
 
 Dotenv.load('api_key.env')
 
@@ -52,7 +53,7 @@ subscribers.each do |subscriber|
   end
 
   email_body += "<hr style='margin-top: 30px; margin-bottom: 20px;'>"
-  email_body += "<p style='font-size: 12px; color: #999;'><a href='https://demetrius-sugared-superevangelically.ngrok-free.dev/unsubscribe?email=#{email}'>Unsubscribe</a></p>\n"
+  email_body += "<p style='font-size: 12px; color: #999;'><a href='https://demetrius-sugared-superevangelically.ngrok-free.dev/unsubscribe?email=#{CGI.escape(email)}'>Unsubscribe</a></p>\n"
 
   Mail.deliver do
     from "deesjaime@gmail.com"
