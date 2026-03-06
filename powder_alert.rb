@@ -3,7 +3,6 @@ require "mail"
 require 'dotenv'
 require 'json'
 require 'cgi'
-require 'date'
 
 Dotenv.load('api_key.env')
 
@@ -18,6 +17,8 @@ Mail.defaults do
   }
 end
 
+THRESHOLD = 6
+
 subscribers = JSON.parse(File.read('subscribers.json'))
 
 subscribers.each do |user|
@@ -25,13 +26,11 @@ subscribers.each do |user|
   email = user['email']
   next unless user['locations'].is_a?(Array)
 
-  weekly_locations = user['locations'].select { |l| l['weekly'] == true }
-  next if weekly_locations.empty?
+  powder_matches = []
 
-  email_body = ""
-  email_body += "<h1>❄️ WEEKLY SKI REPORT ❄️</h1>"
+  user['locations'].each do |location|
 
-  weekly_locations.each do |location|
+    next unless location['powder_alert'] == true
 
     latitude = location['latitude']
     longitude = location['longitude']
@@ -49,11 +48,9 @@ subscribers.each do |user|
       query: {
         latitude: latitude,
         longitude: longitude,
-        daily: "temperature_2m_max,temperature_2m_min,snowfall_sum,precipitation_probability_max,wind_speed_10m_max",
+        daily: "snowfall_sum",
         timezone: "America/Los_Angeles",
-        forecast_days: 7,
-        wind_speed_unit: "mph",
-        temperature_unit: "fahrenheit",
+        forecast_days: 1,
         precipitation_unit: "inch"
       }
     )
@@ -61,52 +58,60 @@ subscribers.each do |user|
     next unless response&.code == 200
     next unless response['daily']
 
-    daily_units = response['daily_units']
-    daily_data = response['daily']
+    snowfall = response['daily']['snowfall_sum'][0].to_f
 
-    email_body += "<h2>#{location_display}</h2>"
-
-    daily_data['time'].each_with_index do |date, index|
-      email_body += "<h3>#{Date.parse(date).strftime("%A, %m/%d/%Y")}</h3>"
-      email_body += "<p>🌡️ High: #{daily_data['temperature_2m_max'][index]}#{daily_units['temperature_2m_max']}</p>"
-      email_body += "<p>🧊 Low: #{daily_data['temperature_2m_min'][index]}#{daily_units['temperature_2m_min']}</p>"
-      email_body += "<p>❄️ Snowfall: #{daily_data['snowfall_sum'][index]} #{daily_units['snowfall_sum']}</p>"
-      email_body += "<hr>"
+    # Only store locations that actually have powder
+    if snowfall >= THRESHOLD
+      powder_matches << {
+        display: location_display,
+        snowfall: snowfall,
+        lat: latitude,
+        lon: longitude
+      }
     end
-
-    # Unsubscribe from THIS location
-    single_unsub_weekly =
-      "https://demetrius-sugared-superevangelically.ngrok-free.dev/unsubscribe" \
-      "?email=#{CGI.escape(email)}" \
-      "&lat=#{latitude}" \
-      "&lon=#{longitude}" \
-      "&type=weekly"
-
-    email_body += "<p style='font-size:12px'>"
-    email_body += "<a href='#{single_unsub_weekly}'>Unsubscribe from this location</a>"
-    email_body += "</p>"
-    email_body += "<hr style='margin:25px 0;'>"
-
   end
 
-  # Global unsubscribe
-  all_weekly_unsub =
+  # If no locations have powder → DO NOT send email
+  next if powder_matches.empty?
+
+  email_body = ""
+  email_body += "<h1>❄️ POWDER ALERT ❄️</h1>"
+
+  powder_matches.each do |match|
+    email_body += "<h2>📍 #{match[:display]}</h2>"
+    email_body += "<p>❄️ Expected Snowfall: #{match[:snowfall]} inches</p>"
+
+    single_unsub =
+      "https://demetrius-sugared-superevangelically.ngrok-free.dev/unsubscribe" \
+      "?email=#{CGI.escape(email)}" \
+      "&lat=#{match[:lat]}" \
+      "&lon=#{match[:lon]}" \
+      "&type=powder_alert"
+
+    email_body += "<p style='font-size:12px'>"
+    email_body += "<a href='#{single_unsub}'>Unsubscribe from powder alerts for this location</a>"
+    email_body += "</p>"
+    email_body += "<hr>"
+  end
+
+  all_unsub =
     "https://demetrius-sugared-superevangelically.ngrok-free.dev/unsubscribe" \
     "?email=#{CGI.escape(email)}" \
-    "&type=weekly&all=true"
+    "&type=powder_alert&all=true"
 
+  email_body += "<hr style='margin-top:30px;margin-bottom:20px;'>"
   email_body += "<p style='font-size:12px;color:#999'>"
-  email_body += "<a href='#{all_weekly_unsub}'>Unsubscribe from all weekly reports</a>"
+  email_body += "<a href='#{all_unsub}'>Unsubscribe from all powder alerts</a>"
   email_body += "</p>"
 
   Mail.deliver do
     from "deesjaime@gmail.com"
     to email
-    subject "Weekly Ski Report"
+    subject "Powder Alert! ❄️"
     content_type 'text/html; charset=UTF-8'
     body email_body
   end
 
-  puts "Weekly email sent to #{email}"
+  puts "Powder alert sent to #{email}"
 
 end

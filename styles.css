@@ -32,6 +32,8 @@ h1 {
 
 .subtitle {
     color: #666;
+    text-align: center;
+    margin: 0 auto;
     margin-bottom: 30px;
     font-size: 14px;
 }

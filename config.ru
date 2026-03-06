@@ -27,11 +27,10 @@ class App < Roda
       ""
     end
 
-    # ---- API ----
+    # ---- SUBSCRIBE ----
     r.on 'api' do
       r.on 'subscribers' do
         r.post do
-
           data = r.POST
 
           email = data['email']&.downcase&.strip
@@ -47,8 +46,9 @@ class App < Roda
               'latitude' => loc['latitude'].to_f.round(3),
               'longitude' => loc['longitude'].to_f.round(3),
               'resort_name' => loc['resort_name'],
-              'daily' => loc['daily'],
-              'weekly' => loc['weekly']
+              'daily' => loc['daily'] || false,
+              'weekly' => loc['weekly'] || false,
+              'powder_alert' => loc['powder_alert'] || false
             }
           end
 
@@ -56,15 +56,24 @@ class App < Roda
             user['locations'] ||= []
 
             normalized_locations.each do |new_loc|
-              exists = user['locations'].any? do |existing|
-                existing['latitude'] == new_loc['latitude'] &&
-                existing['longitude'] == new_loc['longitude']
+              existing_loc = user['locations'].find do |existing|
+                existing['latitude'].to_f.round(3) == new_loc['latitude'] &&
+                existing['longitude'].to_f.round(3) == new_loc['longitude']
               end
 
-              # Append only if not already subscribed to that location
-              user['locations'] << new_loc unless exists
-            end
+              if existing_loc
+                # Merge report types
+                existing_loc['daily'] ||= new_loc['daily']
+                existing_loc['weekly'] ||= new_loc['weekly']
+                existing_loc['powder_alert'] ||= new_loc['powder_alert']
 
+                # Update resort name if provided
+                existing_loc['resort_name'] = new_loc['resort_name'] if new_loc['resort_name'] && !new_loc['resort_name'].strip.empty?
+              else
+                # Add new location
+                user['locations'] << new_loc
+              end
+            end
           else
             subscribers << {
               'email' => email,
@@ -82,25 +91,47 @@ class App < Roda
     # ---- Unsubscribe ----
     r.on 'unsubscribe' do
       r.get do
-        email = r.params['email']
-        all = r.params['all']
+
+        email = r.params['email']&.downcase&.strip
+        type = r.params['type']            # daily | weekly | powder_alert
+        all = r.params['all']              # true = all locations but ONLY this type
 
         subscribers = load_subscribers
         user = subscribers.find { |s| s['email'] == email }
 
-        if user
-          if all
-            subscribers.delete(user)
-          else
-            lat = r.params['lat']&.to_f
-            lon = r.params['lon']&.to_f
+        if user && type
 
-            (user['locations'] || []).delete_if do |loc|
-              loc['latitude'] == lat && loc['longitude'] == lon
+          # Make sure locations exist
+          user['locations'] ||= []
+
+          # Unsubscribe logic
+          user['locations'].each do |loc|
+
+            if all
+              # Remove this report type from ALL locations
+              loc[type] = false
+
+            else
+              # Remove this report type ONLY for matching location
+              lat = r.params['lat']&.to_f&.round(3)
+              lon = r.params['lon']&.to_f&.round(3)
+
+              if loc['latitude'].to_f.round(3) == lat &&
+                loc['longitude'].to_f.round(3) == lon
+
+                loc[type] = false
+              end
             end
 
-            subscribers.delete(user) if user['locations'].empty?
           end
+
+          # Remove locations that have NO active subscriptions left
+          user['locations'].delete_if do |loc|
+            !(loc['daily'] || loc['weekly'] || loc['powder_alert'])
+          end
+
+          # Remove user if they have no locations left
+          subscribers.delete(user) if user['locations'].empty?
 
           save_subscribers(subscribers)
         end

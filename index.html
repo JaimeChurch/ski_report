@@ -10,8 +10,8 @@
 
 <body>
     <div class="container">
-        <h1>❄️ Snow Report ❄️</h1>
-        <h5 class="subtitle">Daily/weekly updates for your favorite slopes</h5>
+        <h1>❄️ SnowBot 🤖</h1>
+        <h5 class="subtitle">Daily and Weekly reports plus POWDER ALERTS for your favorite slopes</h5>
 
         <form id="skiForm">
             <div class="form-group">
@@ -40,6 +40,7 @@
                 <input type="number" id="longitude" step="0.001" placeholder="-121.476">
             </div>
 
+            <!-- REPORT TYPE SELECTION -->
             <div class="checkbox-group">
                 <label>
                     <input type="checkbox" value="daily"> Daily Report
@@ -47,6 +48,9 @@
 
                 <label>
                     <input type="checkbox" value="weekly"> Weekly Report
+                </label>
+                <label>
+                    <input type="checkbox" value="powder"> Powder Alerts
                 </label>
             </div>
 
@@ -127,7 +131,7 @@
         //Submit Report
         form.addEventListener("submit", function (e) {
             e.preventDefault()
-            
+
             // Validate coordinates
             const hasCoords =
                 latitudeInput.value.trim() !== "" &&
@@ -158,7 +162,8 @@
                         longitude: longitudeInput.value,
                         resort_name: selectedResortName,
                         daily: selectedReports.includes("daily"),
-                        weekly: selectedReports.includes("weekly")
+                        weekly: selectedReports.includes("weekly"),
+                        powder_alert: selectedReports.includes("powder")
                     }
                 ]
             }
