@@ -124,10 +124,20 @@
             latitudeInput.disabled = false
             longitudeInput.disabled = false
         }
-
-        //Form Submit
+        //Submit Report
         form.addEventListener("submit", function (e) {
             e.preventDefault()
+
+            // Collect checked report types
+            const selectedReports = Array.from(
+                document.querySelectorAll('.checkbox-group input:checked')
+            ).map(cb => cb.value)
+
+            if (selectedReports.length === 0) {
+                alert("Select at least one report type")
+                return
+            }
+
             const selectedResortName = searchInput.value || null
 
             const data = {
@@ -137,15 +147,10 @@
                         latitude: latitudeInput.value,
                         longitude: longitudeInput.value,
                         resort_name: selectedResortName,
-                        daily: document.querySelector('input[value="daily"]').checked,
-                        weekly: document.querySelector('input[value="weekly"]').checked
+                        daily: selectedReports.includes("daily"),
+                        weekly: selectedReports.includes("weekly")
                     }
                 ]
-            }
-
-            if (!data.daily && !data.weekly) {
-                alert("Select at least one report type")
-                return
             }
 
             fetch("https://demetrius-sugared-superevangelically.ngrok-free.dev/api/subscribers", {
@@ -158,17 +163,14 @@
             })
                 .then(res => res.json())
                 .then(result => {
-
                     if (result.success) {
                         alert("Signup successful!")
                         form.reset()
-
                         latitudeInput.disabled = false
                         longitudeInput.disabled = false
                     } else {
                         alert(result.error)
                     }
-
                 })
                 .catch(err => {
                     console.error(err)
