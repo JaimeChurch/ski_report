@@ -76,6 +76,39 @@ select {
     cursor: pointer;
 }
 
+.dropdown{
+    position: relative;
+    width: 100%;
+}
+
+.dropdown input{
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.dropdown-list{
+    position: absolute;
+    width: 100%;
+    max-height: 250px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    z-index: 999;
+    display: none;
+}
+
+.dropdown-item{
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown-item:hover{
+    background: #f0f0f0;
+}
+
 select:focus {
     outline: none;
     border-color: #667eea;
@@ -104,7 +137,7 @@ input[type="checkbox"] {
 .submit-btn {
     width: 100%;
     padding: 12px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background:#667eea;
     color: white;
     border: none;
     border-radius: 6px;

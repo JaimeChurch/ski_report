@@ -10,144 +10,169 @@
 
 <body>
     <div class="container">
-        <h1>❄️ Ski Report ❄️</h1>
-        <p class="subtitle">Daily/weekly updates for your favorite slopes.</p>
-
-        <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" placeholder="you@example.com" required>
-        </div>
+        <h1>❄️ Snow Report ❄️</h1>
+        <h5 class="subtitle">Daily/weekly updates for your favorite slopes</h5>
 
         <form id="skiForm">
             <div class="form-group">
-                <label for="resort">SELECT A RESORT</label>
-                <select id="resort" name="resort">
-                    <option value="">-- Select a Resort --</option>
-                    <option value="35.326,-111.686">Snowbowl, AZ</option>
-                    <option value="33.936,-109.566">Sunrize Park, AZ</option>
-                    <option value="37.650,-119.037">Mammoth, CA</option>
-                    <option value="39.355,-120.258">Tahoe Donner, CA</option>
-                    <option value="39.190,-106.948">Snowmass, CO</option>
-                    <option value="37.936,-107.845">Tellride, CO</option>
-                    <option value="39.606,-106.355">Vail, CO</option>
-                    <option value="43.486,-114.829">Soldier Mt., ID</option>
-                    <option value="46.753,-112.313">Great Divide, MO</option>
-                    <option value="47.014,-113.999">Montana Snowbowl, MO</option>
-                    <option value="36.376,-105.238">Angel Fire, NM</option>
-                    <option value="36.304,-115.680">Lee Canyon, NV</option>
-                    <option value="39.336,-119.888">Mt. Rose, NV</option>
-                    <option value="44.963,-118.234">Anthony Lake, OR</option>
-                    <option value="43.97938,-121.68851">Mount Bachelor, OR</option>
-                    <option value="45.37351,-121.69588">Mount Hood, OR</option>
-                    <option value="37.705,-112.850">Brian Head, UT</option>
-                    <option value="38.320,-112.384">Eagle Point, UT</option>
-                    <option value="40.391,-111.578">Sundance, UT</option>
-                    <option value="46.923,-121.476">Crystal Mountain, WA</option>
-                    <option value="47.292,-120.400">Mission Ridge, WA</option>
-                    <option value="47.925,-117.113">Mt. Spokane, WA</option>
-                    <option value="47.40595,-121.41297">Snoqualmie Pass, WA</option>
-                    <option value="47.744,-121.089">Stevens Pass, WA</option>
-                    <option value="44.073,-107.340">Meadowlark, WY</option>
-                    <option value="41.341,-106.184">Snowy Ridge, WY</option>
-                    <option value="42.978,-109.739">White Pine, WY</option>
-                </select>
+                <label>Email Address</label>
+                <input type="email" id="email" placeholder="yourname@example.com" required>
+            </div>
+
+            <!-- SEARCHABLE DROPDOWN -->
+            <div class="form-group dropdown">
+                <label>Search Resort</label>
+                <input type="text" id="resortSearch" placeholder="Type resort name..." autocomplete="off" />
+                <div id="dropdownList" class="dropdown-list"></div>
             </div>
 
             <div class="form-group">
-                <label for="latitude">OR USE CUSTOM COORDINATES</label>
-            </div>
-  
-            <div class="form-group">
-                <label for="latitude">Latitude</label>
-                <input type="number" id="latitude" name="latitude" step="0.001" placeholder="46.92" required>
+                <label>Or Use Custom Coordinates</label>
             </div>
 
             <div class="form-group">
-                <label for="longitude">Longitude</label>
-                <input type="number" id="longitude" name="longitude" step="0.001" placeholder="-121.48" required>
+                <label>Latitude</label>
+                <input type="number" id="latitude" step="0.001" placeholder="46.923" required>
+            </div>
+
+            <div class="form-group">
+                <label>Longitude</label>
+                <input type="number" id="longitude" step="0.001" placeholder="-121.476" required>
             </div>
 
             <div class="checkbox-group">
                 <label>
-                    <input type="checkbox" name="reports" value="daily">
-                    Daily Report
+                    <input type="checkbox" value="daily"> Daily Report
                 </label>
+
                 <label>
-                    <input type="checkbox" name="reports" value="weekly">
-                    Weekly Report
+                    <input type="checkbox" value="weekly"> Weekly Report
                 </label>
             </div>
 
-            <button type="submit" class="submit-btn">Subscribe</button>
+            <button type="submit" class="submit-btn">
+                Subscribe
+            </button>
 
-            <p class="info-text">Your data will only be used to send you reports.</p>
+            <p class="info-text">
+                Your data will only be used to send reports.
+            </p>
         </form>
     </div>
 
     <script>
-        const form = document.getElementById('skiForm');
-        const resortSelect = document.getElementById('resort');
-        const latitudeInput = document.getElementById('latitude');
-        const longitudeInput = document.getElementById('longitude');
+        const searchInput = document.getElementById("resortSearch")
+        const dropdownList = document.getElementById("dropdownList")
 
-// Populate lat/long when resort is selected
-        resortSelect.addEventListener('change', function () {
-            if (this.value) {
-                const [lat, lon] = this.value.split(',');
-                latitudeInput.value = lat;
-                longitudeInput.value = lon;
-            } else {
-                latitudeInput.value = '';
-                longitudeInput.value = '';
+        const latitudeInput = document.getElementById("latitude")
+        const longitudeInput = document.getElementById("longitude")
+
+        const form = document.getElementById("skiForm")
+        const emailInput = document.getElementById("email")
+
+        let resorts = []
+
+        //Load Resorts Database
+        fetch("resorts.json")
+            .then(res => res.json())
+            .then(data => resorts = data)
+
+        //Dropdown Search Logic
+        searchInput.addEventListener("focus", showDropdown)
+        searchInput.addEventListener("input", filterResorts)
+
+        function showDropdown() {
+            dropdownList.style.display = "block"
+            filterResorts()
+        }
+
+        document.addEventListener("click", e => {
+            if (!e.target.closest(".dropdown")) {
+                dropdownList.style.display = "none"
             }
-        });
+        })
 
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
+        function filterResorts() {
+            dropdownList.innerHTML = ""
+            const query = searchInput.value.toLowerCase()
 
-            const latitude = document.getElementById('latitude').value;
-            const longitude = document.getElementById('longitude').value;
-            const email = document.getElementById('email').value;
-            const daily = document.querySelector('input[value="daily"]').checked;
-            const weekly = document.querySelector('input[value="weekly"]').checked;
+            const matches = resorts.filter(r =>
+                r.name.toLowerCase().includes(query)
+            )
 
-            if (!daily && !weekly) {
-                alert('Please select at least one report type');
-                return;
-            }
+            matches.forEach(resort => {
+                const div = document.createElement("div")
+                div.className = "dropdown-item"
+                div.textContent = resort.name
+
+                div.onclick = () => {
+                    searchInput.value = resort.name
+                    latitudeInput.value = resort.lat
+                    longitudeInput.value = resort.lon
+                    latitudeInput.disabled = true
+                    longitudeInput.disabled = true
+                    dropdownList.style.display = "none"
+                }
+                dropdownList.appendChild(div)
+            })
+        }
+
+        //Allow Custom Coordinates
+        latitudeInput.addEventListener("input", resetSearch)
+        longitudeInput.addEventListener("input", resetSearch)
+
+        function resetSearch() {
+            searchInput.value = ""
+            latitudeInput.disabled = false
+            longitudeInput.disabled = false
+        }
+
+        //Form Submit
+        form.addEventListener("submit", function (e) {
+            e.preventDefault()
+            const selectedResortName = searchInput.value || null
 
             const data = {
-                latitude: latitude,
-                longitude: longitude,
-                email: email,
-                daily: daily,
-                weekly: weekly
-            };
+                latitude: latitudeInput.value,
+                longitude: longitudeInput.value,
+                resort_name: selectedResortName,
+                email: emailInput.value,
+                daily: document.querySelector('input[value="daily"]').checked,
+                weekly: document.querySelector('input[value="weekly"]').checked
+            }
 
-            // Send to backend
-            fetch('https://demetrius-sugared-superevangelically.ngrok-free.dev/api/subscribers', {
-                method: 'POST',
+            if (!data.daily && !data.weekly) {
+                alert("Select at least one report type")
+                return
+            }
+
+            fetch("https://demetrius-sugared-superevangelically.ngrok-free.dev/api/subscribers", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
-                    'ngrok-skip-browser-warning': 'true',
-                    'User-Agent': 'Mozilla/5.0'
+                    "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "true"
                 },
                 body: JSON.stringify(data)
             })
-                .then(response => response.json())
+                .then(res => res.json())
                 .then(result => {
+
                     if (result.success) {
-                        alert('Signup successful! Check your email to confirm.');
-                        form.reset();
+                        alert("Signup successful!")
+                        form.reset()
+
+                        latitudeInput.disabled = false
+                        longitudeInput.disabled = false
                     } else {
-                        alert('Error: ' + result.error);
+                        alert(result.error)
                     }
+
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Failed to connect to server');
-                });
-        });
+                .catch(err => {
+                    console.error(err)
+                    alert("Failed to connect to server")
+                })
+        })
     </script>
 </body>
 

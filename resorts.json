@@ -1,0 +1,489 @@
+[
+    {
+        "name": "Arizona Snowbowl, AZ",
+        "display": "Snowbowl, AZ",
+        "lat": 35.326,
+        "lon": -111.686
+    },
+    {
+        "name": "Sunrise Park Resort, AZ",
+        "display": "Sunrise Park, AZ",
+        "lat": 33.936,
+        "lon": -109.566
+    },
+    {
+        "name": "Mammoth Mountain, CA",
+        "display": "Mammoth, CA",
+        "lat": 37.650,
+        "lon": -119.037
+    },
+    {
+        "name": "Tahoe Donner, CA",
+        "display": "Tahoe Donner, CA",
+        "lat": 39.355,
+        "lon": -120.258
+    },
+    {
+        "name": "Snowmass, CO",
+        "display": "Snowmass, CO",
+        "lat": 39.190,
+        "lon": -106.948
+    },
+    {
+        "name": "Telluride, CO",
+        "display": "Telluride, CO",
+        "lat": 37.936,
+        "lon": -107.845
+    },
+    {
+        "name": "Vail, CO",
+        "display": "Vail, CO",
+        "lat": 39.606,
+        "lon": -106.355
+    },
+    {
+        "name": "Soldier Mountain, ID",
+        "display": "Soldier Mt., ID",
+        "lat": 43.486,
+        "lon": -114.829
+    },
+    {
+        "name": "Great Divide Ski Area, MT",
+        "display": "Great Divide, MT",
+        "lat": 46.753,
+        "lon": -112.313
+    },
+    {
+        "name": "Montana Snowbowl, MT",
+        "display": "Montana Snowbowl, MT",
+        "lat": 47.014,
+        "lon": -113.999
+    },
+    {
+        "name": "Angel Fire Resort, NM",
+        "display": "Angel Fire, NM",
+        "lat": 36.376,
+        "lon": -105.238
+    },
+    {
+        "name": "Lee Canyon, NV",
+        "display": "Lee Canyon, NV",
+        "lat": 36.304,
+        "lon": -115.680
+    },
+    {
+        "name": "Mt. Rose Ski Tahoe, NV",
+        "display": "Mt. Rose, NV",
+        "lat": 39.336,
+        "lon": -119.888
+    },
+    {
+        "name": "Anthony Lakes Mountain Resort, OR",
+        "display": "Anthony Lakes, OR",
+        "lat": 44.963,
+        "lon": -118.234
+    },
+    {
+        "name": "Mount Bachelor, OR",
+        "display": "Mount Bachelor, OR",
+        "lat": 43.97938,
+        "lon": -121.68851
+    },
+    {
+        "name": "Mount Hood Meadows, OR",
+        "display": "Mount Hood, OR",
+        "lat": 45.37351,
+        "lon": -121.69588
+    },
+    {
+        "name": "Brian Head Resort, UT",
+        "display": "Brian Head, UT",
+        "lat": 37.705,
+        "lon": -112.850
+    },
+    {
+        "name": "Eagle Point Resort, UT",
+        "display": "Eagle Point, UT",
+        "lat": 38.320,
+        "lon": -112.384
+    },
+    {
+        "name": "Sundance Mountain Resort, UT",
+        "display": "Sundance, UT",
+        "lat": 40.391,
+        "lon": -111.578
+    },
+    {
+        "name": "Crystal Mountain, WA",
+        "display": "Crystal Mountain, WA",
+        "lat": 46.923,
+        "lon": -121.476
+    },
+    {
+        "name": "Mission Ridge, WA",
+        "display": "Mission Ridge, WA",
+        "lat": 47.292,
+        "lon": -120.400
+    },
+    {
+        "name": "Mt. Spokane Ski & Snowboard Park, WA",
+        "display": "Mt. Spokane, WA",
+        "lat": 47.925,
+        "lon": -117.113
+    },
+    {
+        "name": "Summit at Snoqualmie, WA",
+        "display": "Summit at Snoqualmie, WA",
+        "lat": 47.40595,
+        "lon": -121.41297
+    },
+    {
+        "name": "Stevens Pass, WA",
+        "display": "Stevens Pass, WA",
+        "lat": 47.744,
+        "lon": -121.089
+    },
+    {
+        "name": "Meadowlark Ski Lodge, WY",
+        "display": "Meadowlark, WY",
+        "lat": 44.073,
+        "lon": -107.340
+    },
+    {
+        "name": "Snowy Range Ski Area, WY",
+        "display": "Snowy Range, WY",
+        "lat": 41.341,
+        "lon": -106.184
+    },
+    {
+        "name": "White Pine Ski Resort, WY",
+        "display": "White Pine, WY",
+        "lat": 42.978,
+        "lon": -109.739
+    },
+    {
+        "name": "Jackson Hole Mountain Resort, WY",
+        "lat": 43.5875,
+        "lon": -110.8277
+    },
+    {
+        "name": "Big Sky Resort, MT",
+        "lat": 45.2846,
+        "lon": -111.4010
+    },
+    {
+        "name": "Bridger Bowl, MT",
+        "lat": 45.8196,
+        "lon": -110.8966
+    },
+    {
+        "name": "Deer Valley Resort, UT",
+        "lat": 40.6374,
+        "lon": -111.4780
+    },
+    {
+        "name": "Park City Mountain, UT",
+        "lat": 40.6513,
+        "lon": -111.5080
+    },
+    {
+        "name": "Snowbird, UT",
+        "lat": 40.5836,
+        "lon": -111.6558
+    },
+    {
+        "name": "Alta Ski Area, UT",
+        "lat": 40.5883,
+        "lon": -111.6380
+    },
+    {
+        "name": "Solitude Mountain Resort, UT",
+        "lat": 40.6197,
+        "lon": -111.5914
+    },
+    {
+        "name": "Brighton Resort, UT",
+        "lat": 40.5997,
+        "lon": -111.5832
+    },
+    {
+        "name": "Steamboat Resort, CO",
+        "lat": 40.4598,
+        "lon": -106.8049
+    },
+    {
+        "name": "Keystone Resort, CO",
+        "lat": 39.6056,
+        "lon": -105.9540
+    },
+    {
+        "name": "Breckenridge Ski Resort, CO",
+        "lat": 39.4817,
+        "lon": -106.0384
+    },
+    {
+        "name": "Copper Mountain, CO",
+        "lat": 39.5022,
+        "lon": -106.1498
+    },
+    {
+        "name": "Arapahoe Basin, CO",
+        "lat": 39.6428,
+        "lon": -105.8710
+    },
+    {
+        "name": "Winter Park Resort, CO",
+        "lat": 39.8860,
+        "lon": -105.7625
+    },
+    {
+        "name": "Loveland Ski Area, CO",
+        "lat": 39.6800,
+        "lon": -105.8970
+    },
+    {
+        "name": "Aspen Mountain, CO",
+        "lat": 39.1867,
+        "lon": -106.8185
+    },
+    {
+        "name": "Buttermilk Mountain, CO",
+        "lat": 39.2133,
+        "lon": -106.8586
+    },
+    {
+        "name": "Sun Valley Resort, ID",
+        "lat": 43.6820,
+        "lon": -114.3637
+    },
+    {
+        "name": "Grand Targhee Resort, WY",
+        "lat": 43.7870,
+        "lon": -110.9570
+    },
+    {
+        "name": "Whitefish Mountain Resort, MT",
+        "lat": 48.4817,
+        "lon": -114.3524
+    },
+    {
+        "name": "Red Lodge Mountain, MT",
+        "lat": 45.1890,
+        "lon": -109.3360
+    },
+    {
+        "name": "Timberline Lodge, OR",
+        "lat": 45.3317,
+        "lon": -121.7110
+    },
+    {
+        "name": "Mount Ashland, OR",
+        "lat": 42.0808,
+        "lon": -122.7130
+    },
+    {
+        "name": "Mt Shasta Ski Park, CA",
+        "lat": 41.3206,
+        "lon": -122.1956
+    },
+    {
+        "name": "Sugar Bowl Resort, CA",
+        "lat": 39.3030,
+        "lon": -120.3370
+    },
+    {
+        "name": "Heavenly Mountain Resort, CA/NV",
+        "lat": 38.9350,
+        "lon": -119.9390
+    },
+    {
+        "name": "Northstar California, CA",
+        "lat": 39.2740,
+        "lon": -120.1210
+    },
+    {
+        "name": "Kirkwood Mountain Resort, CA",
+        "lat": 38.6840,
+        "lon": -120.0650
+    },
+    {
+        "name": "Bear Mountain, CA",
+        "lat": 34.2280,
+        "lon": -116.8600
+    },
+    {
+        "name": "Snow Summit, CA",
+        "lat": 34.2280,
+        "lon": -116.8890
+    },
+    {
+        "name": "Mt Baldy Resort, CA",
+        "lat": 34.2644,
+        "lon": -117.6460
+    },
+    {
+        "name": "Mont Tremblant, QC",
+        "lat": 46.2117,
+        "lon": -74.5847
+    },
+    {
+        "name": "Le Massif de Charlevoix, QC",
+        "lat": 47.2825,
+        "lon": -70.8250
+    },
+    {
+        "name": "Blue Mountain Resort, ON",
+        "lat": 44.5006,
+        "lon": -80.3158
+    },
+    {
+        "name": "Whistler Blackcomb, BC",
+        "lat": 50.1163,
+        "lon": -122.9574
+    },
+    {
+        "name": "Sun Peaks Resort, BC",
+        "lat": 50.8840,
+        "lon": -119.8850
+    },
+    {
+        "name": "Revelstoke Mountain Resort, BC",
+        "lat": 50.9580,
+        "lon": -118.1640
+    },
+    {
+        "name": "Fernie Alpine Resort, BC",
+        "lat": 49.4600,
+        "lon": -115.0820
+    },
+    {
+        "name": "Panorama Mountain Resort, BC",
+        "lat": 50.4650,
+        "lon": -116.2390
+    },
+    {
+        "name": "Kicking Horse Mountain Resort, BC",
+        "lat": 51.2970,
+        "lon": -116.9650
+    },
+    {
+        "name": "Big White Ski Resort, BC",
+        "lat": 49.7280,
+        "lon": -118.9300
+    },
+    {
+        "name": "SilverStar Mountain Resort, BC",
+        "lat": 50.3640,
+        "lon": -119.0570
+    },
+    {
+        "name": "Lake Louise Ski Resort, AB",
+        "lat": 51.4400,
+        "lon": -116.1600
+    },
+    {
+        "name": "Sunshine Village, AB",
+        "lat": 51.1150,
+        "lon": -115.7640
+    },
+    {
+        "name": "Marmot Basin, AB",
+        "lat": 52.8220,
+        "lon": -118.0730
+    },
+    {
+        "name": "Nakiska Ski Area, AB",
+        "lat": 50.9440,
+        "lon": -115.1520
+    },
+    {
+        "name": "Snow King Mountain, WY",
+        "lat": 43.4720,
+        "lon": -110.7610
+    },
+    {
+        "name": "Palisades Tahoe, CA",
+        "lat": 39.1960,
+        "lon": -120.2350
+    },
+    {
+        "name": "Sugarloaf, ME",
+        "lat": 45.0310,
+        "lon": -70.3130
+    },
+    {
+        "name": "Sunday River, ME",
+        "lat": 44.4730,
+        "lon": -70.8480
+    },
+    {
+        "name": "Stowe Mountain Resort, VT",
+        "lat": 44.5280,
+        "lon": -72.7790
+    },
+    {
+        "name": "Killington Resort, VT",
+        "lat": 43.6040,
+        "lon": -72.8200
+    },
+    {
+        "name": "Mount Snow, VT",
+        "lat": 42.9600,
+        "lon": -72.9200
+    },
+    {
+        "name": "Okemo Mountain Resort, VT",
+        "lat": 43.4010,
+        "lon": -72.7170
+    },
+    {
+        "name": "Stratton Mountain, VT",
+        "lat": 43.1140,
+        "lon": -72.9080
+    },
+    {
+        "name": "Jay Peak Resort, VT",
+        "lat": 44.9240,
+        "lon": -72.5310
+    },
+    {
+        "name": "Hunter Mountain, NY",
+        "lat": 42.2040,
+        "lon": -74.2150
+    },
+    {
+        "name": "Windham Mountain, NY",
+        "lat": 42.3030,
+        "lon": -74.2570
+    },
+    {
+        "name": "Whiteface Mountain, NY",
+        "lat": 44.3650,
+        "lon": -73.9030
+    },
+    {
+        "name": "Bromont, QC",
+        "lat": 45.3130,
+        "lon": -72.6500
+    },
+    {
+        "name": "Mont Sainte-Anne, QC",
+        "lat": 47.0740,
+        "lon": -70.9250
+    },
+    {
+        "name": "Mont Orford, QC",
+        "lat": 45.3220,
+        "lon": -72.2460
+    },
+    {
+        "name": "Mount Norquay, AB",
+        "lat": 51.2050,
+        "lon": -115.5910
+    },
+    {
+        "name": "Castle Mountain Resort, AB",
+        "lat": 49.3040,
+        "lon": -114.4080
+    }
+]
