@@ -79,3 +79,4 @@ subscribers.each do |user|
 
   puts "Email sent to #{email}"
 end
+end

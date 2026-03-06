@@ -32,12 +32,12 @@
 
             <div class="form-group">
                 <label>Latitude</label>
-                <input type="number" id="latitude" step="0.001" placeholder="46.923" required>
+                <input type="number" id="latitude" step="0.001" placeholder="46.923">
             </div>
 
             <div class="form-group">
                 <label>Longitude</label>
-                <input type="number" id="longitude" step="0.001" placeholder="-121.476" required>
+                <input type="number" id="longitude" step="0.001" placeholder="-121.476">
             </div>
 
             <div class="checkbox-group">
@@ -63,10 +63,8 @@
     <script>
         const searchInput = document.getElementById("resortSearch")
         const dropdownList = document.getElementById("dropdownList")
-
         const latitudeInput = document.getElementById("latitude")
         const longitudeInput = document.getElementById("longitude")
-
         const form = document.getElementById("skiForm")
         const emailInput = document.getElementById("email")
 
@@ -133,12 +131,16 @@
             const selectedResortName = searchInput.value || null
 
             const data = {
-                latitude: latitudeInput.value,
-                longitude: longitudeInput.value,
-                resort_name: selectedResortName,
                 email: emailInput.value,
-                daily: document.querySelector('input[value="daily"]').checked,
-                weekly: document.querySelector('input[value="weekly"]').checked
+                locations: [
+                    {
+                        latitude: latitudeInput.value,
+                        longitude: longitudeInput.value,
+                        resort_name: selectedResortName,
+                        daily: document.querySelector('input[value="daily"]').checked,
+                        weekly: document.querySelector('input[value="weekly"]').checked
+                    }
+                ]
             }
 
             if (!data.daily && !data.weekly) {
