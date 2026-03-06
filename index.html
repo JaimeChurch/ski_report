@@ -127,6 +127,16 @@
         //Submit Report
         form.addEventListener("submit", function (e) {
             e.preventDefault()
+            
+            // Validate coordinates
+            const hasCoords =
+                latitudeInput.value.trim() !== "" &&
+                longitudeInput.value.trim() !== "";
+
+            if (!hasCoords) {
+                alert("Please select a resort or enter coordinates")
+                return;
+            }
 
             // Collect checked report types
             const selectedReports = Array.from(

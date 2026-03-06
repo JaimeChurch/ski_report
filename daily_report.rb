@@ -64,8 +64,8 @@ subscribers.each do |user|
   all_unsub = "https://demetrius-sugared-superevangelically.ngrok-free.dev/unsubscribe?email=#{CGI.escape(email)}&all=true"
 
   email_body += "<p style='font-size: 12px; color: #999;'>"
-  email_body += "Don't want these emails?<br>"
-  email_body += "<a href='#{single_unsub}'>Unsubscribe from this location</a><br>"
+  email_body += "Don't want these emails?<br><br>"
+  email_body += "<a href='#{single_unsub}'>Unsubscribe from this location</a><br><br>"
   email_body += "<a href='#{all_unsub}'>Unsubscribe from ALL locations</a><br>"
   email_body += "</p>"
 
