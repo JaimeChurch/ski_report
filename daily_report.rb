@@ -53,7 +53,14 @@ subscribers.each do |subscriber|
   end
 
   email_body += "<hr style='margin-top: 30px; margin-bottom: 20px;'>"
-  email_body += "<p style='font-size: 12px; color: #999;'><a href='https://demetrius-sugared-superevangelically.ngrok-free.dev/unsubscribe?email=#{CGI.escape(email)}'>Unsubscribe</a></p>\n"
+  single_unsub = "https://demetrius-sugared-superevangelically.ngrok-free.dev/unsubscribe?email=#{CGI.escape(email)}&lat=#{latitude}&lon=#{longitude}"
+  all_unsub = "https://demetrius-sugared-superevangelically.ngrok-free.dev/unsubscribe?email=#{CGI.escape(email)}&all=true"
+
+  email_body += "<p style='font-size: 12px; color: #999;'>"
+  email_body += "Don't want these emails?<br>"
+  email_body += "<a href='#{single_unsub}'>Unsubscribe from this location</a><br>"
+  email_body += "<a href='#{all_unsub}'>Unsubscribe from ALL locations</a><br>"
+  email_body += "</p>"
 
   Mail.deliver do
     from "deesjaime@gmail.com"

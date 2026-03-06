@@ -6,56 +6,100 @@ class App < Roda
   plugin :all_verbs
 
   route do |r|
-    # Handle OPTIONS preflight at the top level
-    if r.options?
-      response['Access-Control-Allow-Origin'] = '*'
-      response['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
-      response['Access-Control-Allow-Headers'] = 'Content-Type, ngrok-skip-browser-warning'
-      response.status = 200
-      return ""
-    end
 
-    # CORS headers for all requests
+    # ---- CORS ----
     response['Access-Control-Allow-Origin'] = '*'
     response['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
     response['Access-Control-Allow-Headers'] = 'Content-Type, ngrok-skip-browser-warning'
 
+    r.options do
+      response.status = 200
+      ""
+    end
+
+    # ---- Helpers ----
+    def load_subscribers
+      File.write('subscribers.json', '[]') unless File.exist?('subscribers.json')
+      JSON.parse(File.read('subscribers.json'))
+    end
+
+    def save_subscribers(data)
+      File.write('subscribers.json', JSON.pretty_generate(data))
+    end
+
+    # ---- API ----
     r.on 'api' do
       r.on 'subscribers' do
         r.post do
-          puts "POST received!"
-          
-          data = JSON.parse(request.body.read)
-          puts "Data: #{data.inspect}"
-          
-          File.write('subscribers.json', '[]') unless File.exist?('subscribers.json')
-          subscribers = JSON.parse(File.read('subscribers.json'))
-          
-          return { error: 'Already subscribed' }.to_json if subscribers.any? { |s| s['email'] == data['email'] }
-          
-          subscribers << {
-            email: data['email'],
-            latitude: data['latitude'].to_f.round(2),
-            longitude: data['longitude'].to_f.round(2),
-            daily: data['daily'],
-            weekly: data['weekly']
-          }
-          
-          File.write('subscribers.json', JSON.pretty_generate(subscribers))
+          data = r.params
+
+          lat = data['latitude'].to_f.round(3)
+          lon = data['longitude'].to_f.round(3)
+
+          subscribers = load_subscribers
+          user = subscribers.find { |s| s['email'] == data['email'] }
+
+          if user
+            if user['locations'].any? { |l| l['latitude'] == lat && l['longitude'] == lon }
+              next { error: 'Already subscribed to this location' }.to_json
+            end
+
+            user['locations'] << {
+              latitude: lat,
+              longitude: lon,
+              daily: data['daily'],
+              weekly: data['weekly']
+            }
+
+          else
+            subscribers << {
+              email: data['email'],
+              locations: [
+                {
+                  latitude: lat,
+                  longitude: lon,
+                  daily: data['daily'],
+                  weekly: data['weekly']
+                }
+              ]
+            }
+          end
+
+          save_subscribers(subscribers)
           { success: true }.to_json
         end
       end
     end
 
-    r.on 'unsubscribe' do
-      r.get do
-        email = r.params['email']
-        subscribers = JSON.parse(File.read('subscribers.json'))
-        subscribers.delete_if { |s| s['email'] == email }
-        File.write('subscribers.json', JSON.pretty_generate(subscribers))
-        "You have been unsubscribed."
+# ---- Unsubscribe ----
+r.on 'unsubscribe' do
+  r.get do
+    email = r.params['email']
+    all = r.params['all']
+
+    subscribers = load_subscribers
+    user = subscribers.find { |s| s['email'] == email }
+
+    if user
+      if all
+        # Remove entire user
+        subscribers.delete(user)
+      else
+        lat = r.params['lat']&.to_f
+        lon = r.params['lon']&.to_f
+
+        user['locations'].delete_if do |loc|
+          loc['latitude'] == lat && loc['longitude'] == lon
+        end
+
+        # Remove user if no locations remain
+        subscribers.delete(user) if user['locations'].empty?
       end
+
+      save_subscribers(subscribers)
     end
+
+    "You have been unsubscribed."
   end
 end
 
