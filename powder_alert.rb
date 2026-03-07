@@ -60,7 +60,7 @@ subscribers.each do |user|
 
     snowfall = response['daily']['snowfall_sum'][0].to_f
 
-    # Only store locations that actually have powder
+    # Only store locations that match
     if snowfall >= THRESHOLD
       powder_matches << {
         display: location_display,
@@ -71,14 +71,15 @@ subscribers.each do |user|
     end
   end
 
-  # If no locations have powder → DO NOT send email
+  # Skip if no matches
   next if powder_matches.empty?
 
+  #Email
   email_body = ""
   email_body += "<h1>❄️ POWDER ALERT ❄️</h1>"
 
   powder_matches.each do |match|
-    email_body += "<h2>📍 #{match[:display]}</h2>"
+    email_body += "<h2>#{match[:display]}</h2>"
     email_body += "<p>❄️ Expected Snowfall: #{match[:snowfall]} inches</p>"
 
     single_unsub =

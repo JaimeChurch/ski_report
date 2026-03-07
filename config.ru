@@ -1,5 +1,6 @@
 require 'roda'
 require 'json'
+require './welcome_message.rb'
 
 class App < Roda
   plugin :json_parser
@@ -40,48 +41,76 @@ class App < Roda
 
           subscribers = load_subscribers
           user = subscribers.find { |s| s['email'] == email }
+          new_user = false
 
-          normalized_locations = locations.map do |loc|
-            {
-              'latitude' => loc['latitude'].to_f.round(3),
-              'longitude' => loc['longitude'].to_f.round(3),
-              'resort_name' => loc['resort_name'],
-              'daily' => loc['daily'] || false,
-              'weekly' => loc['weekly'] || false,
-              'powder_alert' => loc['powder_alert'] || false
-            }
+          unless user
+            user = { 'email' => email, 'locations' => [] }
+            subscribers << user
+            new_user = true
           end
 
-          if user
-            user['locations'] ||= []
+          user['locations'] ||= []
 
-            normalized_locations.each do |new_loc|
-              existing_loc = user['locations'].find do |existing|
-                existing['latitude'].to_f.round(3) == new_loc['latitude'] &&
-                existing['longitude'].to_f.round(3) == new_loc['longitude']
-              end
+          added_locations = []
 
-              if existing_loc
-                # Merge report types
-                existing_loc['daily'] ||= new_loc['daily']
-                existing_loc['weekly'] ||= new_loc['weekly']
-                existing_loc['powder_alert'] ||= new_loc['powder_alert']
+          locations.each do |loc|
+            lat = loc['latitude'].to_f.round(3)
+            lon = loc['longitude'].to_f.round(3)
 
-                # Update resort name if provided
-                existing_loc['resort_name'] = new_loc['resort_name'] if new_loc['resort_name'] && !new_loc['resort_name'].strip.empty?
-              else
-                # Add new location
-                user['locations'] << new_loc
-              end
+            existing = user['locations'].find do |l|
+              l['latitude'].to_f.round(3) == lat &&
+              l['longitude'].to_f.round(3) == lon
             end
-          else
-            subscribers << {
-              'email' => email,
-              'locations' => normalized_locations
-            }
+
+            if existing
+              # Track if any new subscription type was added
+              new_type_added = false
+
+              if loc['daily'] && !existing['daily']
+                existing['daily'] = true
+                new_type_added = true
+              end
+
+              if loc['weekly'] && !existing['weekly']
+                existing['weekly'] = true
+                new_type_added = true
+              end
+
+              if loc['powder_alert'] && !existing['powder_alert']
+                existing['powder_alert'] = true
+                new_type_added = true
+              end
+
+              if new_type_added
+                added_locations << existing
+              end
+
+              if loc['resort_name'] && !loc['resort_name'].strip.empty?
+                existing['resort_name'] = loc['resort_name']
+              end
+
+            else
+              new_location = {
+                'latitude' => lat,
+                'longitude' => lon,
+                'resort_name' => loc['resort_name'],
+                'daily' => !!loc['daily'],
+                'weekly' => !!loc['weekly'],
+                'powder_alert' => !!loc['powder_alert']
+              }
+
+              user['locations'] << new_location
+              added_locations << new_location
+            end
           end
 
           save_subscribers(subscribers)
+
+          # ---- SEND WELCOME EMAIL ONLY IF NEW SUBSCRIPTION ----
+          if added_locations.any?
+            require_relative './welcome_message'
+            send_welcome_email(email, added_locations)
+          end
 
           { success: true }.to_json
         end
