@@ -24,14 +24,14 @@ subscribers.each do |user|
 
   email = user['email']
   next unless user['locations'].is_a?(Array)
+  
+  daily_locations = user['locations'].select { |l| l['daily'] == true }
+  next if daily_locations.empty?
 
   email_body = ""
   email_body += "<h1>❄️ DAILY SKI REPORT ❄️</h1>"
 
-  user['locations'].each do |location|
-
-    next unless location['daily'] == true
-
+  daily_locations.each do |location|
     latitude = location['latitude']
     longitude = location['longitude']
     resort_name = location['resort_name']
@@ -56,8 +56,6 @@ subscribers.each do |user|
         precipitation_unit: "inch"
       }
     )
-
-    next unless response && response['daily']
 
     daily_units = response['daily_units']
     daily_data = response['daily']
