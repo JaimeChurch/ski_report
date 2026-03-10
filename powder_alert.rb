@@ -3,6 +3,7 @@ require "mail"
 require 'dotenv'
 require 'json'
 require 'cgi'
+require 'date'
 
 Dotenv.load('api_key.env')
 
@@ -17,19 +18,20 @@ Mail.defaults do
   }
 end
 
+# Setting POWDER ALERT threshold
 THRESHOLD = 6
 
+# Reading subscriber list
 subscribers = JSON.parse(File.read('subscribers.json'))
 
+# Iterate over subscribers
 subscribers.each do |user|
-
   email = user['email']
-  next unless user['locations'].is_a?(Array)
-
   powder_matches = []
 
+  # Iterate over locations
   user['locations'].each do |location|
-
+    # Skip locations w/o POWDER ALERTS
     next unless location['powder_alert'] == true
 
     latitude = location['latitude']
@@ -43,6 +45,7 @@ subscribers.each do |user|
         "#{latitude}, #{longitude}"
       end
 
+    # Fetch snowfall from Open-Meteo
     response = HTTParty.get(
       "https://api.open-meteo.com/v1/forecast",
       query: {
@@ -55,6 +58,7 @@ subscribers.each do |user|
       }
     )
 
+    #Verifies response from API
     next unless response&.code == 200
     next unless response['daily']
 
@@ -74,10 +78,11 @@ subscribers.each do |user|
   # Skip if no matches
   next if powder_matches.empty?
 
-  #Email
+  # Alert Email
   email_body = ""
   email_body += "<h1>❄️ POWDER ALERT ❄️</h1>"
 
+  # Unsubscribe from single location
   powder_matches.each do |match|
     email_body += "<h2>#{match[:display]}</h2>"
     email_body += "<p>❄️ Expected Snowfall: #{match[:snowfall]} inches</p>"
@@ -95,6 +100,7 @@ subscribers.each do |user|
     email_body += "<hr>"
   end
 
+  # Unsub from ALL locations
   all_unsub =
     "https://demetrius-sugared-superevangelically.ngrok-free.dev/unsubscribe" \
     "?email=#{CGI.escape(email)}" \
@@ -105,6 +111,7 @@ subscribers.each do |user|
   email_body += "<a href='#{all_unsub}'>Unsubscribe from all powder alerts</a>"
   email_body += "</p>"
 
+  # Send email
   Mail.deliver do
     from "deesjaime@gmail.com"
     to email
@@ -114,5 +121,4 @@ subscribers.each do |user|
   end
 
   puts "Powder alert sent to #{email}"
-
 end

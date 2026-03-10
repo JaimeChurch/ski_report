@@ -13,31 +13,31 @@
     <div class="container">
         <h1>❄️ SnowBot 🤖</h1>
         <h5 class="subtitle">DAILY and WEEKLY reports plus<br> POWDER ALERTS for your favorite slopes</h5>
-
+        <!-- Email -->
         <form id="skiForm">
             <div class="form-group">
                 <label>Email Address</label>
                 <input type="email" id="email" placeholder="yourname@example.com" required>
             </div>
 
-            <!-- SEARCHABLE DROPDOWN -->
+            <!-- Searchable Dropdown -->
             <div class="form-group dropdown">
                 <label>Search Resort (or enter custom coordinates)</label>
                 <input type="text" id="resortSearch" placeholder="Type resort name..." autocomplete="off" />
                 <div id="dropdownList" class="dropdown-list"></div>
             </div>
 
+            <!-- Lat & Long -->
             <div class="form-group">
                 <label>Latitude</label>
                 <input type="number" id="latitude" step="0.001" placeholder="46.923">
             </div>
-
             <div class="form-group">
                 <label>Longitude</label>
                 <input type="number" id="longitude" step="0.001" placeholder="-121.476">
             </div>
 
-            <!-- REPORT TYPE SELECTION -->
+            <!-- Report Selection -->
             <div class="checkbox-group">
                 <label>
                     <input type="checkbox" value="daily"> Daily Report
@@ -68,14 +68,14 @@
         const form = document.getElementById("skiForm")
         const emailInput = document.getElementById("email")
 
+        //Load Resorts
         let resorts = []
 
-        //Load Resorts Database
         fetch("resorts.json")
             .then(res => res.json())
             .then(data => resorts = data)
 
-        //Dropdown Search Logic
+        //Dropdown List
         searchInput.addEventListener("focus", showDropdown)
         searchInput.addEventListener("input", filterResorts)
 
@@ -90,6 +90,7 @@
             }
         })
 
+        //Search Filter
         function filterResorts() {
             dropdownList.innerHTML = ""
             const query = searchInput.value.toLowerCase()
@@ -115,7 +116,7 @@
             })
         }
 
-        //Allow Custom Coordinates
+        //Custom Coordinates
         latitudeInput.addEventListener("input", resetSearch)
         longitudeInput.addEventListener("input", resetSearch)
 
@@ -124,6 +125,7 @@
             latitudeInput.disabled = false
             longitudeInput.disabled = false
         }
+
         //Submit Report
         form.addEventListener("submit", function (e) {
             e.preventDefault()
@@ -134,11 +136,11 @@
                 longitudeInput.value.trim() !== "";
 
             if (!hasCoords) {
-                alert("Please select a resort or enter coordinates")
+                alert("Please select a resort or enter custom coordinates")
                 return;
             }
 
-            // Collect checked report types
+            // Get checked report types
             const selectedReports = Array.from(
                 document.querySelectorAll('.checkbox-group input:checked')
             ).map(cb => cb.value)
@@ -150,6 +152,7 @@
 
             const selectedResortName = searchInput.value || null
 
+            //Organizing data to send to server
             const data = {
                 email: emailInput.value,
                 locations: [
@@ -164,6 +167,7 @@
                 ]
             }
 
+            //POSTing data to JSON file on server
             fetch("https://demetrius-sugared-superevangelically.ngrok-free.dev/api/subscribers", {
                 method: "POST",
                 headers: {

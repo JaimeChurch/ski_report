@@ -18,19 +18,23 @@ Mail.defaults do
   }
 end
 
+# Load Subscribers
 subscribers = JSON.parse(File.read('subscribers.json'))
 
+# Iterate over subscriber list
 subscribers.each do |user|
 
   email = user['email']
-  next unless user['locations'].is_a?(Array)
   
+  # Skips locations w/o Daily reports
   daily_locations = user['locations'].select { |l| l['daily'] == true }
   next if daily_locations.empty?
 
+  # Compose email
   email_body = ""
   email_body += "<h1>❄️ DAILY SKI REPORT ❄️</h1>"
 
+  # Iterate over daily locations
   daily_locations.each do |location|
     latitude = location['latitude']
     longitude = location['longitude']
@@ -43,6 +47,7 @@ subscribers.each do |user|
         "#{latitude}, #{longitude}"
       end
 
+    # Fetch weather report from Open-Meteo
     response = HTTParty.get(
       "https://api.open-meteo.com/v1/forecast",
       query: {
@@ -82,12 +87,11 @@ subscribers.each do |user|
       email_body += "<p style='font-size:12px'>"
       email_body += "<a href='#{single_unsub_daily}'>Unsubscribe from this location</a>"
       email_body += "</p>"
-
       email_body += "<hr>"
     end
   end
 
-  # Global unsubscribe footer
+  # Global unsubscribe
   all_daily_unsub =
     "https://demetrius-sugared-superevangelically.ngrok-free.dev/unsubscribe" \
     "?email=#{CGI.escape(email)}" \
