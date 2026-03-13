@@ -31,7 +31,7 @@ def send_welcome_email(user_email, locations)
 
     location_display =
       if resort_name && !resort_name.strip.empty?
-        resort_name
+        CGI.escapeHTML(resort_name)
       else
         "#{latitude}, #{longitude}"
       end
@@ -65,7 +65,7 @@ def send_welcome_email(user_email, locations)
   Mail.deliver do
     from "deesjaime@gmail.com"
     to user_email
-    subject "Welcome to Snow Report"
+    subject "Welcome to SnowBot!"
     content_type 'text/html; charset=UTF-8'
     body email_body
   end

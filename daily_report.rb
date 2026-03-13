@@ -116,7 +116,7 @@ subscribers.each do |user|
   Mail.deliver do
     from "deesjaime@gmail.com"
     to email
-    subject "Daily Ski Report"
+    subject "Daily ❄️ Report"
     content_type 'text/html; charset=UTF-8'
     body email_body
   end
