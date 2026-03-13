@@ -4,6 +4,7 @@ require './welcome_message.rb'
 
 class App < Roda
   plugin :json_parser
+  # Enables all HTTP requests
   plugin :all_verbs
 
   #  Helpers 
@@ -32,10 +33,10 @@ class App < Roda
       r.on 'subscribers' do
         r.post do
           data = r.POST
-          # Validate Email
+
+          # Validate Email and Location
           email = data['email']&.downcase&.strip
           return { success: false, error: "Invalid email" }.to_json unless email&.include?("@")
-
           loc = data['locations']&.first
           return { success: false, error: "No location provided" }.to_json unless loc
 
@@ -44,11 +45,14 @@ class App < Roda
 
           # Load Subscribers
           subscribers = load_subscribers
-          user = subscribers.find { |s| s['email'] == email }
 
+          # Check if user is new subscriber
+          user = subscribers.find { |s| s['email'] == email }
           new_user = false
+
           unless user
             user = { 'email' => email, 'locations' => [] }
+            #Appends user to subscribers array
             subscribers << user
             new_user = true
           end

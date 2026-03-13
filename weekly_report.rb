@@ -25,7 +25,7 @@ subscribers.each do |user|
   email = user['email']
   next unless user['locations'].is_a?(Array)
 
-  weekly_locations = user['locations'].select { |l| l['weekly'] == true }
+  weekly_locations = user['locations'].select { |l| l['weekly'] }
   next if weekly_locations.empty?
 
   email_body = ""
@@ -39,24 +39,31 @@ subscribers.each do |user|
 
     location_display =
       if resort_name && !resort_name.strip.empty?
-        resort_name
+        CGI.escapeHTML(resort_name)
       else
         "#{latitude}, #{longitude}"
       end
 
-    response = HTTParty.get(
-      "https://api.open-meteo.com/v1/forecast",
-      query: {
-        latitude: latitude,
-        longitude: longitude,
-        daily: "temperature_2m_max,temperature_2m_min,snowfall_sum,precipitation_probability_max,wind_speed_10m_max",
-        timezone: "America/Los_Angeles",
-        forecast_days: 7,
-        wind_speed_unit: "mph",
-        temperature_unit: "fahrenheit",
-        precipitation_unit: "inch"
-      }
-    )
+    begin
+      response = HTTParty.get(
+        "https://api.open-meteo.com/v1/forecast",
+        query: {
+          latitude: latitude,
+          longitude: longitude,
+          daily: "temperature_2m_max,temperature_2m_min,snowfall_sum,precipitation_probability_max,wind_speed_10m_max",
+          timezone: "America/Los_Angeles",
+          forecast_days: 7,
+          wind_speed_unit: "mph",
+          temperature_unit: "fahrenheit",
+          precipitation_unit: "inch"
+        }
+      )
+    rescue StandardError => e
+      puts "Weather API error for #{location_display}: #{e.message}"
+      next
+    end
+
+    sleep 0.3
 
     next unless response&.code == 200
     next unless response['daily']

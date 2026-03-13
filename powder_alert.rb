@@ -40,23 +40,30 @@ subscribers.each do |user|
 
     location_display =
       if resort_name && !resort_name.strip.empty?
-        resort_name
+        CGI.escapeHTML(resort_name)
       else
         "#{latitude}, #{longitude}"
       end
 
     # Fetch snowfall from Open-Meteo
-    response = HTTParty.get(
-      "https://api.open-meteo.com/v1/forecast",
-      query: {
-        latitude: latitude,
-        longitude: longitude,
-        daily: "snowfall_sum",
-        timezone: "America/Los_Angeles",
-        forecast_days: 1,
-        precipitation_unit: "inch"
-      }
-    )
+    begin
+      response = HTTParty.get(
+        "https://api.open-meteo.com/v1/forecast",
+        query: {
+          latitude: latitude,
+          longitude: longitude,
+          daily: "snowfall_sum",
+          timezone: "America/Los_Angeles",
+          forecast_days: 1,
+          precipitation_unit: "inch"
+        }
+      )
+    rescue StandardError => e
+      puts "Weather API error for #{location_display}: #{e.message}"
+      next
+    end 
+
+    sleep 0.3
 
     #Verifies response from API
     next unless response&.code == 200
