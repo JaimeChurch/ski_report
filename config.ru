@@ -110,27 +110,20 @@ class App < Roda
       r.get do
         email = r.params['email']&.downcase&.strip
         type = r.params['type']            # daily | weekly | powder_alert
-        all = r.params['all']              # true = all locations but ONLY this type
 
         subscribers = load_subscribers
         user = subscribers.find { |s| s['email'] == email }
 
         if user && type
-          if all
-            # Unsubscribe from the given report type for all locations
-            user['locations'].each { |loc| loc[type] = false }
-          else
-            # Unsubscribe from a single location for the given type
-            lat = r.params['lat']&.to_f&.round(3)
-            lon = r.params['lon']&.to_f&.round(3)
+          lat = r.params['lat']&.to_f&.round(3)
+          lon = r.params['lon']&.to_f&.round(3)
 
-            loc = user['locations'].find do |l|
-              l['latitude'].to_f.round(3) == lat &&
-              l['longitude'].to_f.round(3) == lon
-            end
-
-            loc[type] = false if loc
+          loc = user['locations'].find do |l|
+            l['latitude'].to_f.round(3) == lat &&
+            l['longitude'].to_f.round(3) == lon
           end
+
+          loc[type] = false if loc
 
           # Remove locations with no active subscriptions
           user['locations'].delete_if { |loc| !(loc['daily'] || loc['weekly'] || loc['powder_alert']) }

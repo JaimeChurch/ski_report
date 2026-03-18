@@ -60,8 +60,12 @@ subscribers.each do |user|
           wind_speed_unit: "mph",
           temperature_unit: "fahrenheit",
           precipitation_unit: "inch"
-        }
+        },
+        timeout: 30
       )
+    rescue Net::OpenTimeout, Net::ReadTimeout => e
+      puts "API timeout for #{location_display}: #{e.message}"
+      next
     rescue StandardError => e
       puts "Weather API error for #{location_display}: #{e.message}"
       next
@@ -92,26 +96,14 @@ subscribers.each do |user|
         "?email=#{CGI.escape(email)}" \
         "&lat=#{latitude}" \
         "&lon=#{longitude}" \
-        "&type=daily"
-
+        "&type=daily" \
+        "&ngrok-skip-browser-warning=69"
       email_body += "<p style='font-size:12px'>"
       email_body += "<a href='#{single_unsub_daily}'>Unsubscribe from this location</a>"
       email_body += "</p>"
       email_body += "<hr>"
     end
   end
-
-  # Global unsubscribe
-  all_daily_unsub =
-    "https://demetrius-sugared-superevangelically.ngrok-free.dev/unsubscribe" \
-    "?email=#{CGI.escape(email)}" \
-    "&type=daily" \
-    "&all=true"
-
-  email_body += "<hr style='margin-top:30px;margin-bottom:20px;'>"
-  email_body += "<p style='font-size:12px;color:#999'>"
-  email_body += "<a href='#{all_daily_unsub}'>Unsubscribe from all daily reports</a>"
-  email_body += "</p>"
 
   Mail.deliver do
     from "deesjaime@gmail.com"

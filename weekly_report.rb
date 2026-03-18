@@ -87,24 +87,14 @@ subscribers.each do |user|
       "?email=#{CGI.escape(email)}" \
       "&lat=#{latitude}" \
       "&lon=#{longitude}" \
-      "&type=weekly"
-
+      "&type=weekly" \
+      "&ngrok-skip-browser-warning=69"
     email_body += "<p style='font-size:12px'>"
     email_body += "<a href='#{single_unsub_weekly}'>Unsubscribe from this location</a>"
     email_body += "</p>"
     email_body += "<hr style='margin:25px 0;'>"
 
   end
-
-  # Global unsubscribe
-  all_weekly_unsub =
-    "https://demetrius-sugared-superevangelically.ngrok-free.dev/unsubscribe" \
-    "?email=#{CGI.escape(email)}" \
-    "&type=weekly&all=true"
-
-  email_body += "<p style='font-size:12px;color:#999'>"
-  email_body += "<a href='#{all_weekly_unsub}'>Unsubscribe from all weekly reports</a>"
-  email_body += "</p>"
 
   Mail.deliver do
     from "deesjaime@gmail.com"

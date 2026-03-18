@@ -55,6 +55,46 @@ def send_welcome_email(user_email, locations)
     end
 
     email_body += "</ul>"
+
+    # Add unsubscribe links for each enabled subscription type
+    if location['daily']
+      daily_unsub =
+        "https://demetrius-sugared-superevangelically.ngrok-free.dev/unsubscribe" \
+        "?email=#{CGI.escape(user_email)}" \
+        "&lat=#{latitude}" \
+        "&lon=#{longitude}" \
+        "&type=daily" \
+        "&ngrok-skip-browser-warning=69"
+      email_body += "<p style='font-size:12px'>"
+      email_body += "<a href='#{daily_unsub}'>Unsubscribe from daily reports</a>"
+      email_body += "</p>"
+    end
+
+    if location['weekly']
+      weekly_unsub =
+        "https://demetrius-sugared-superevangelically.ngrok-free.dev/unsubscribe" \
+        "?email=#{CGI.escape(user_email)}" \
+        "&lat=#{latitude}" \
+        "&lon=#{longitude}" \
+        "&type=weekly" \
+        "&ngrok-skip-browser-warning=69"
+      email_body += "<p style='font-size:12px'>"
+      email_body += "<a href='#{weekly_unsub}'>Unsubscribe from weekly reports</a>"
+      email_body += "</p>"
+    end
+
+    if location['powder_alert']
+      powder_unsub =
+        "https://demetrius-sugared-superevangelically.ngrok-free.dev/unsubscribe" \
+        "?email=#{CGI.escape(user_email)}" \
+        "&lat=#{latitude}" \
+        "&lon=#{longitude}" \
+        "&type=powder_alert" \
+        "&ngrok-skip-browser-warning=69"
+      email_body += "<p style='font-size:12px'>"
+      email_body += "<a href='#{powder_unsub}'>Unsubscribe from powder alerts</a>"
+      email_body += "</p>"
+    end
   end
 
   email_body += "<hr>"

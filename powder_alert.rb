@@ -99,24 +99,13 @@ subscribers.each do |user|
       "?email=#{CGI.escape(email)}" \
       "&lat=#{match[:lat]}" \
       "&lon=#{match[:lon]}" \
-      "&type=powder_alert"
-
+      "&type=powder_alert" \
+      "&ngrok-skip-browser-warning=69"
     email_body += "<p style='font-size:12px'>"
     email_body += "<a href='#{single_unsub}'>Unsubscribe from powder alerts for this location</a>"
     email_body += "</p>"
     email_body += "<hr>"
   end
-
-  # Unsub from ALL locations
-  all_unsub =
-    "https://demetrius-sugared-superevangelically.ngrok-free.dev/unsubscribe" \
-    "?email=#{CGI.escape(email)}" \
-    "&type=powder_alert&all=true"
-
-  email_body += "<hr style='margin-top:30px;margin-bottom:20px;'>"
-  email_body += "<p style='font-size:12px;color:#999'>"
-  email_body += "<a href='#{all_unsub}'>Unsubscribe from all powder alerts</a>"
-  email_body += "</p>"
 
   # Send email
   Mail.deliver do
